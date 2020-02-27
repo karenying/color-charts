@@ -1,0 +1,23 @@
+{
+	"manifest_version": 2,
+
+	"name": "Color Charts",
+	"description": "Extension for Random Apps of Kindness 2020",
+	"version": "1.0",
+	"author": "Karen Ying",
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "all_frames": true,
+        "js":      ["contentScript.js"]
+    }],
+
+	"permissions": [
+        "tabs",
+        "http://*/",
+        "https://*/"
+    ],
+	"browser_action": {
+		"default_icon": "logo.png",
+		"default_popup": "popup.html"
+	}
+}
