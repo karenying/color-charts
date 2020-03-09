@@ -1,5 +1,4 @@
-import { $, jQuery } from 'jquery';
-
+/*
 const desaturateImage = function(image) {
     var canvas = document.createElement("canvas");
     image.parentNode.insertBefore(canvas, image);
@@ -20,11 +19,11 @@ const desaturateImage = function(image) {
         data[i + 2] = grey;
     }
     ctx.putImageData(imgData, 0, 0, 0, 0, canvas.width, canvas.height);
-}
+} */
 
 let images = document.getElementsByTagName('img');
 
 for (let i = 0; i < images.length; i++) {
     console.log($(images[i]).css());
-    desaturateImage(images[i]);
+    // desaturateImage(images[i]);
 }
