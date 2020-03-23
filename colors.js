@@ -1,13 +1,15 @@
-export const ORANGE = "E69F00";
+const ORANGE = [230, 159, 0];
 
-export const LIGHT_BLUE = "56B4E9";
+const LIGHT_BLUE = [86, 180, 233];
 
-export const GREEN = "009E73";
+const GREEN = [0, 158, 115];
 
-export const YELLOW = "F0E442";
+const YELLOW = [240, 228, 66];
 
-export const RED = "D55E00";
+const RED = [213, 94, 0];
 
-export const PINK = "CC79A7";
+const PINK = [204, 121, 167];
 
-export const BLACK = "000000";
+const BLACK = [0, 0, 0];
+
+export const COLORBLIND_FRIENDLY_COLORS = [ORANGE, LIGHT_BLUE, GREEN, YELLOW, RED, PINK, BLACK];
