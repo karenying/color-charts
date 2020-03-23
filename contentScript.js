@@ -1,5 +1,5 @@
 // import { COLORBLIND_FRIENDLY_COLORS } from './colors';
-
+// get all images
 let images = document.getElementsByTagName('img');
 
 for (let i = 0; i < images.length; i++) {
@@ -45,9 +45,13 @@ for (let i = 0; i < images.length; i++) {
             data[j + 2] = 0;
         } 
     }
-    console.log(colorMap);
+
+    // update canvas image 
     ctx.putImageData(imgData, 0, 0, 0, 0, canvas.width, canvas.height);
 
+    // create base64 url
     var base64_url = canvas.toDataURL();
+
+    // replace src with base64 url
     images[i].src = base64_url;
 }
