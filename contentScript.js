@@ -23,9 +23,18 @@ for (let i = 0; i < images.length; i++) {
         let rg_diff = Math.abs(r - g), gb_diff = Math.abs(g - b), br_diff = Math.abs(b - r);
 
         if (rg_diff >= 15 || gb_diff >= 15 || br_diff >= 15) {
-            /*
-            let rgb = [r, g, b];
+            // go through all the seen colors
+            Object.keys(colorMap).forEach(color => {
+                // calculate difference between every seen color and current color
+                let r_diff = Math.abs(color[0] - r), g_diff = Math.abs(color[1] - g), b_diff = Math.abs(color[2] - b);
 
+                // if different enough, add the color to the dictionary
+                if (r_diff >= 10 && g_diff >= 10 && b_diff >= 10) {
+                    let rgb = [r, g, b];
+                    colorMap[rgb] = 0;
+                }
+            })  
+            /*
             if (!colorMap.hasOwnProperty(rgb)) {
                 colorMap[rgb] = 0;
             }
