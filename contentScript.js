@@ -1,4 +1,13 @@
-// import { COLORBLIND_FRIENDLY_COLORS } from './colors';
+// ------------------- color constants --------------------------------------
+const ORANGE = [230, 159, 0];
+const LIGHT_BLUE = [86, 180, 233];
+const GREEN = [0, 158, 115];
+const YELLOW = [240, 228, 66];
+const RED = [213, 94, 0];
+const PINK = [204, 121, 167];
+const BLACK = [0, 0, 0];
+const COLORBLIND_FRIENDLY_COLORS = [ORANGE, LIGHT_BLUE, GREEN, YELLOW, RED, PINK, BLACK];
+// -------------------------------------------------------------------------
 // get all images
 let images = document.getElementsByTagName('img');
 
@@ -22,27 +31,23 @@ for (let i = 0; i < images.length; i++) {
     
         let rg_diff = Math.abs(r - g), gb_diff = Math.abs(g - b), br_diff = Math.abs(b - r);
 
+        // if color isn't a shade of gray
         if (rg_diff >= 15 || gb_diff >= 15 || br_diff >= 15) {
-            // go through all the seen colors
-            Object.keys(colorMap).forEach(color => {
-                // calculate difference between every seen color and current color
+            let closest;
+            let diff = Number.POSITIVE_INFINITY;
+            COLORBLIND_FRIENDLY_COLORS.forEach(color => {
                 let r_diff = Math.abs(color[0] - r), g_diff = Math.abs(color[1] - g), b_diff = Math.abs(color[2] - b);
+                let curr_diff = r_diff + g_diff + b_diff;
 
-                // if different enough, add the color to the dictionary
-                if (r_diff >= 10 && g_diff >= 10 && b_diff >= 10) {
-                    let rgb = [r, g, b];
-                    colorMap[rgb] = 0;
+                if (curr_diff < diff) {
+                    closest = color;
+                    diff = curr_diff;
                 }
-            })  
-            /*
-            if (!colorMap.hasOwnProperty(rgb)) {
-                colorMap[rgb] = 0;
-            }
-            */
-
-            data[j] = 0;
-            data[j + 1] = 255;
-            data[j + 2] = 0;
+            });
+            
+            data[j] = closest[0];
+            data[j + 1] = closest[1];
+            data[j + 2] = closest[2];
         } 
     }
 
