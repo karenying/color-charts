@@ -5,12 +5,17 @@
 
 .popup-container {
     height: auto;
-    width: 200px;
+    width: 300px;
     background: white; 
     padding: 10px;
 } 
 
 .popup-container h1 {
+    padding: 0px;
+    margin: 0px;
+}
+
+.popup-container h3 {
     padding: 0px;
     margin: 0px;
 }
@@ -30,3 +35,19 @@
     align-items: center;
 }
 
+.palette-option {
+    display: flex;
+    align-items: center;
+}
+
+.palette-option h3 {
+    padding: 5px;
+    margin: 0px;
+}
+
+.color-circle {
+    margin: 0px 1px;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+}

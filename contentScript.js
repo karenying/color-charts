@@ -25,8 +25,6 @@ for (let i = 0; i < images.length; i++) {
     var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     var data = imgData.data;
 
-    let colorMap = {}, index = 0;
-
     for (var j = 0; j < data.length; j += 4) {
         let r = data[j], g = data[j + 1], b = data[j + 2];
     
@@ -34,8 +32,8 @@ for (let i = 0; i < images.length; i++) {
 
         // if color isn't a shade of gray
         if (rg_diff >= 15 || gb_diff >= 15 || br_diff >= 15) {
-            let closest;
-            let diff = Number.POSITIVE_INFINITY;
+            let closest, diff = Number.POSITIVE_INFINITY;
+
             COLORBLIND_FRIENDLY_COLORS.forEach(color => {
                 let r_diff = Math.abs(color[0] - r), g_diff = Math.abs(color[1] - g), b_diff = Math.abs(color[2] - b);
                 let curr_diff = r_diff + g_diff + b_diff;
@@ -58,6 +56,6 @@ for (let i = 0; i < images.length; i++) {
     // create base64 url
     var base64_url = canvas.toDataURL();
 
-    // replace src with base64 url
+    // replace original src with base64 url
     images[i].src = base64_url;
 }
