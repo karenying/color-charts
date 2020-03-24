@@ -13,10 +13,10 @@
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "all_frames": true,
-        "js": ["contentScript.js"]
+        "js": ["js/contentScript.js"]
     }],
 	"background": {
-		"scripts": ["background.js"],
+		"scripts": ["js/background.js"],
 		"persistent": true
 	},
 	"permissions": [
