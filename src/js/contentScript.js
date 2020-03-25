@@ -42,6 +42,10 @@ const TOL_MUTED = [TM_LIGHT_BLUE, TM_GREEN, TM_DARK_GREEN, TM_DARK_BLUE, TM_YELL
 const TOL_LIGHT = [TL_LIGHT_GREEN, TL_DARK_GREEN, TL_BLUE, TL_RED, TL_YELLOW, TL_PINK, TL_LIGHT_BLUE, TL_GREEN, GRAY];
 
 const COLORBLIND_FRIENDLY_COLORS = OKABE_ITO;
+
+// var selectedPalette = document.querySelector('input[name="palette"]:checked').value;
+// console.log(selectedPalette);
+
 // -------------------------------------------------------------------------
 // get all images
 let images = document.getElementsByTagName('img');
