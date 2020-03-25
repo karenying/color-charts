@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     var palettes = document.getElementsByTagName('input');
-    for (let item of palettes) {
-        item.onclick = function() {
-            // chrome.runtime.sendMessage(this.value);
-            // alert(item.value);
+    for (let palette of palettes) {
+        palette.onclick = function() {
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-                chrome.tabs.sendMessage(tabs[0].id, {selected: item.value}, function(response) {});  
+                chrome.tabs.sendMessage(tabs[0].id, {selected: palette.value}, function(response) {});  
             });
         }
     }
