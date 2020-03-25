@@ -134,7 +134,8 @@ input:checked + .slider:before {
 .apply {
     display: flex;
     align-items: center;
-    margin: 10px 0px;
+    margin: 10px 5px;
+    position:relative;
 }
 
 .footer {
@@ -152,6 +153,6 @@ input:checked + .slider:before {
 }
 
 .toggle {
-    position: fixed;
-    right: 20px;
+    position: absolute;
+    right: 0px;
 }
