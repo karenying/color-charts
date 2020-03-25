@@ -10,6 +10,11 @@
     padding: 10px;
 } 
 
+.popup-container p {
+    padding: 0px;
+    margin: 0px;
+}
+
 .popup-container h1 {
     padding: 0px;
     margin: 0px;
@@ -129,5 +134,19 @@ input:checked + .slider:before {
 .toggle {
     display: flex;
     align-items: center;
-    margin-top: 10px
+    margin: 10px 0px;
+}
+
+.footer {
+    margin-top: 10px;
+}
+
+.footer p {
+    text-align: right;
+}
+
+.footer p:hover {
+    color: #3B88FD;
+    cursor: pointer;
+    text-decoration: underline;
 }
