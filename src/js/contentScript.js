@@ -1,3 +1,4 @@
+chrome.runtime.onMessage.addListener(function (message) {
 // ------------------- color constants --------------------------------------
 const OI_ORANGE = [230, 159, 0];
 const OI_LIGHT_BLUE = [86, 180, 233];
@@ -41,11 +42,23 @@ const TOL_BRIGHT = [TB_PINK, TB_GREEN, TB_DARK_BLUE, TB_YELLOW, TB_LIGHT_BLUE, T
 const TOL_MUTED = [TM_LIGHT_BLUE, TM_GREEN, TM_DARK_GREEN, TM_DARK_BLUE, TM_YELLOW, TM_DARK_YELLOW, TM_DARK_PINK, TM_PURPLE, GRAY]
 const TOL_LIGHT = [TL_LIGHT_GREEN, TL_DARK_GREEN, TL_BLUE, TL_RED, TL_YELLOW, TL_PINK, TL_LIGHT_BLUE, TL_GREEN, GRAY];
 
-const COLORBLIND_FRIENDLY_COLORS = OKABE_ITO;
+let COLORBLIND_FRIENDLY_COLORS = OKABE_ITO;
 
-chrome.runtime.onMessage.addListener(function (message) {
-	console.log(message);
-});
+/*
+    if (message.selected === "okabe_ito") {
+        COLORBLIND_FRIENDLY_COLORS = OKABE_ITO;
+    }
+    if (message.selected === "tol_bright") {
+        COLORBLIND_FRIENDLY_COLORS = TOL_BRIGHT;
+    }
+    if (message.selected === "tol_muted") {
+        COLORBLIND_FRIENDLY_COLORS = TOL_MUTED;
+    }
+    if (message.selected === "tol_light") {
+        COLORBLIND_FRIENDLY_COLORS = TOL_LIGHT;
+    }
+*/
+
 // -------------------------------------------------------------------------
 // get all images
 let images = document.getElementsByTagName('img');
@@ -97,3 +110,4 @@ for (let i = 0; i < images.length; i++) {
     // replace original src with base64 url
     images[i].src = base64_url;
 }
+});
