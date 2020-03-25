@@ -46,10 +46,10 @@ chrome.runtime.onMessage.addListener(function (message) {
     const TOL_MUTED = [TM_LIGHT_BLUE, TM_GREEN, TM_DARK_GREEN, TM_DARK_BLUE, TM_YELLOW, TM_DARK_YELLOW, TM_PINK, TM_DARK_PINK, TM_PURPLE, GRAY]
     const TOL_LIGHT = [TL_LIGHT_GREEN, TL_DARK_GREEN, TL_BLUE, TL_RED, TL_YELLOW, TL_PINK, TL_LIGHT_BLUE, TL_GREEN, GRAY];
 
-    let COLORBLIND_FRIENDLY_COLORS = OKABE_ITO;
+    let COLORBLIND_FRIENDLY_COLORS;
 
     // problem right now is its filtering on top of filters
-    /*
+    
     if (message.selected === "okabe_ito") {
         COLORBLIND_FRIENDLY_COLORS = OKABE_ITO;
     }
@@ -62,7 +62,7 @@ chrome.runtime.onMessage.addListener(function (message) {
     if (message.selected === "tol_light") {
         COLORBLIND_FRIENDLY_COLORS = TOL_LIGHT;
     }
-    */
+    
     // -------------------------------------------------------------------------
     // get all images
     let images = document.getElementsByTagName('img');
