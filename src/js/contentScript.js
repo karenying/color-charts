@@ -1,5 +1,6 @@
 chrome.runtime.onMessage.addListener(function (message) {
     // ------------------- color constants --------------------------------------
+    // Okabe & Ito
     const OI_ORANGE = [230, 159, 0];
     const OI_LIGHT_BLUE = [86, 180, 233];
     const OI_GREEN = [0, 158, 115];
@@ -9,6 +10,7 @@ chrome.runtime.onMessage.addListener(function (message) {
     const OI_PINK = [204, 121, 167];
     const BLACK = [0, 0, 0];
 
+    // Tol (bright)
     const TB_PINK = [238, 102, 119];
     const TB_GREEN = [34, 136, 51];
     const TB_DARK_BLUE = [68, 119, 170];
@@ -17,6 +19,7 @@ chrome.runtime.onMessage.addListener(function (message) {
     const TB_PURPLE = [170, 51, 119];
     const TB_GRAY = [187, 187, 187];
 
+    // Tol (muted)
     const TM_LIGHT_BLUE = [136, 204, 238];
     const TM_GREEN = [68, 170, 153];
     const TM_DARK_GREEN = [17, 119, 51];
@@ -28,6 +31,7 @@ chrome.runtime.onMessage.addListener(function (message) {
     const TM_PURPLE = [170, 68, 153];
     const GRAY = [221, 221, 221];
 
+    // Tol (light)
     const TL_LIGHT_GREEN = [191, 196, 101];
     const TL_DARK_GREEN = [170, 170, 0];
     const TL_BLUE = [119, 170, 221];
