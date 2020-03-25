@@ -1,17 +1,9 @@
-var palettes = document.getElementsByTagName('input');
-let selectedPalette;
-
-for (let item of palettes) {
-    console.log(item);
-}
-/*
-for (let i = 0; i < palettes.length; i++) {
-   console.log(palettes[i]);
-   
-    if (palettes[i].checked) {
-        selectedPalette = palettes[i];
-        break;
+document.addEventListener('DOMContentLoaded', function() {
+    var palettes = document.getElementsByTagName('input');
+    for (let item of palettes) {
+        item.onclick = function() {
+            chrome.runtime.sendMessage(this.value);
+            alert(this.value);
+        }
     }
-}
-
-*/
+}, false);

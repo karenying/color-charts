@@ -43,9 +43,9 @@ const TOL_LIGHT = [TL_LIGHT_GREEN, TL_DARK_GREEN, TL_BLUE, TL_RED, TL_YELLOW, TL
 
 const COLORBLIND_FRIENDLY_COLORS = OKABE_ITO;
 
-// var selectedPalette = document.querySelector('input[name="palette"]:checked').value;
-// console.log(selectedPalette);
-
+chrome.runtime.onMessage.addListener(function (message) {
+	console.log(message);
+});
 // -------------------------------------------------------------------------
 // get all images
 let images = document.getElementsByTagName('img');
