@@ -49,7 +49,6 @@ chrome.runtime.onMessage.addListener(function (message) {
     let COLORBLIND_FRIENDLY_COLORS;
 
     // problem right now is its filtering on top of filters
-    
     if (message.selected === "okabe_ito") {
         COLORBLIND_FRIENDLY_COLORS = OKABE_ITO;
     }
@@ -62,14 +61,14 @@ chrome.runtime.onMessage.addListener(function (message) {
     if (message.selected === "tol_light") {
         COLORBLIND_FRIENDLY_COLORS = TOL_LIGHT;
     }
-    
+
     // -------------------------------------------------------------------------
     // get all images
     let images = document.getElementsByTagName('img');
 
     for (let i = 0; i < images.length; i++) {
         let image = images[i];
-        
+
         var canvas = document.createElement("canvas");
         canvas.width = image.naturalWidth;
         canvas.height = image.naturalHeight;
@@ -82,7 +81,7 @@ chrome.runtime.onMessage.addListener(function (message) {
 
         for (var j = 0; j < data.length; j += 4) {
             let r = data[j], g = data[j + 1], b = data[j + 2];
-        
+
             let rg_diff = Math.abs(r - g), gb_diff = Math.abs(g - b), br_diff = Math.abs(b - r);
 
             // if color isn't a shade of gray
@@ -90,6 +89,7 @@ chrome.runtime.onMessage.addListener(function (message) {
                 let closest, diff = Number.POSITIVE_INFINITY;
 
                 COLORBLIND_FRIENDLY_COLORS.forEach(color => {
+                    // compute difference
                     let r_diff = Math.abs(color[0] - r), g_diff = Math.abs(color[1] - g), b_diff = Math.abs(color[2] - b);
                     let curr_diff = r_diff + g_diff + b_diff;
 
@@ -98,11 +98,12 @@ chrome.runtime.onMessage.addListener(function (message) {
                         diff = curr_diff;
                     }
                 });
-                
+
+                // overwrite current color with closest match based on rgb difference
                 data[j] = closest[0];
                 data[j + 1] = closest[1];
                 data[j + 2] = closest[2];
-            } 
+            }
         }
 
         // update canvas image 

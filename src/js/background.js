@@ -9,7 +9,7 @@ chrome.contextMenus.create({
     type: "radio",
     contexts: ['image'],
     parentId: 'parent',
-    checked: true, 
+    checked: true,
 });
 
 chrome.contextMenus.create({
@@ -17,7 +17,7 @@ chrome.contextMenus.create({
     type: "radio",
     contexts: ['image'],
     parentId: 'parent',
-    checked: false, 
+    checked: false,
 });
 
 chrome.contextMenus.create({
@@ -33,7 +33,7 @@ chrome.contextMenus.create({
     type: "radio",
     contexts: ['image'],
     parentId: 'parent',
-    checked: false, 
+    checked: false,
 });
 
 chrome.contextMenus.create({
@@ -41,5 +41,5 @@ chrome.contextMenus.create({
     type: "radio",
     contexts: ['image'],
     parentId: 'parent',
-    checked: false, 
+    checked: false,
 });
