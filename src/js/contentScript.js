@@ -146,96 +146,99 @@ chrome.runtime.onMessage.addListener(function (message) {
     const TOL_LIGHT = [TL_LIGHT_GREEN, TL_DARK_GREEN, TL_BLUE, TL_RED, TL_YELLOW, TL_PINK, TL_LIGHT_BLUE, TL_GREEN, GRAY];
 
     // ------------------- helper methods --------------------------------------
-    rgbToLab = function(rgb){
+    rgbToLab = function (rgb) {
         var r = rgb[0] / 255,
             g = rgb[1] / 255,
             b = rgb[2] / 255,
             x, y, z;
-      
+
         r = (r > 0.04045) ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
         g = (g > 0.04045) ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
         b = (b > 0.04045) ? Math.pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
-      
+
         x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047;
         y = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 1.00000;
         z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883;
-      
-        x = (x > 0.008856) ? Math.pow(x, 1/3) : (7.787 * x) + 16/116;
-        y = (y > 0.008856) ? Math.pow(y, 1/3) : (7.787 * y) + 16/116;
-        z = (z > 0.008856) ? Math.pow(z, 1/3) : (7.787 * z) + 16/116;
-      
+
+        x = (x > 0.008856) ? Math.pow(x, 1 / 3) : (7.787 * x) + 16 / 116;
+        y = (y > 0.008856) ? Math.pow(y, 1 / 3) : (7.787 * y) + 16 / 116;
+        z = (z > 0.008856) ? Math.pow(z, 1 / 3) : (7.787 * z) + 16 / 116;
+
         return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
     }
 
     //----------------------------------------------------------------------------
-    let COLORBLIND_FRIENDLY_COLORS;
+    let currPalette;
 
     // problem right now is its filtering on top of filters
     if (message.selected === "okabe_ito") {
-        COLORBLIND_FRIENDLY_COLORS = OKABE_ITO;
+        currPalette = OKABE_ITO;
     }
     if (message.selected === "tol_bright") {
-        COLORBLIND_FRIENDLY_COLORS = TOL_BRIGHT;
+        currPalette = TOL_BRIGHT;
     }
     if (message.selected === "tol_muted") {
-        COLORBLIND_FRIENDLY_COLORS = TOL_MUTED;
+        currPalette = TOL_MUTED;
     }
     if (message.selected === "tol_light") {
-        COLORBLIND_FRIENDLY_COLORS = TOL_LIGHT;
+        currPalette = TOL_LIGHT;
     }
 
+    let applyAll = message.applyAll
     // -------------------------------------------------------------------------
     // get all images
-    let images = document.getElementsByTagName('img');
+    if (currPalette) {
+        let images = document.getElementsByTagName('img');
 
-    for (let i = 0; i < images.length; i++) {
-        let image = images[i];
+        for (let i = 0; i < images.length; i++) {
+            let image = images[i];
 
-        var canvas = document.createElement("canvas");
-        canvas.width = image.naturalWidth;
-        canvas.height = image.naturalHeight;
+            var canvas = document.createElement("canvas");
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
 
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(image, 0, 0);
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0);
 
-        var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        var data = imgData.data;
+            var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var data = imgData.data;
 
-        for (var j = 0; j < data.length; j += 4) {
-            let r = data[j], g = data[j + 1], b = data[j + 2];
-            let rgb = [r, g, b];
-            let Lab = rgbToLab(rgb);
+            for (var j = 0; j < data.length; j += 4) {
+                let r = data[j], g = data[j + 1], b = data[j + 2];
+                let rgb = [r, g, b];
+                let Lab = rgbToLab(rgb);
 
-            let rg_diff = Math.abs(r - g), gb_diff = Math.abs(g - b), br_diff = Math.abs(b - r);
+                let rg_diff = Math.abs(r - g), gb_diff = Math.abs(g - b), br_diff = Math.abs(b - r);
 
-            // if color isn't a shade of gray
-            if (rg_diff >= 15 || gb_diff >= 15 || br_diff >= 15) {
-                let closest, dist = Number.POSITIVE_INFINITY;
+                // if color isn't a shade of gray
+                if (rg_diff >= 15 || gb_diff >= 15 || br_diff >= 15) {
+                    let closest, dist = Number.POSITIVE_INFINITY;
 
-                COLORBLIND_FRIENDLY_COLORS.forEach(color => {
-                    // compute distance
-                    let curr_dist = Math.pow((color.Lab[0] - Lab[0]), 2) + Math.pow((color.Lab[1] - Lab[1]), 2) + Math.pow((color.Lab[2] - Lab[2]), 2);
+                    currPalette.forEach(color => {
+                        // compute distance
+                        let curr_dist = Math.pow((color.Lab[0] - Lab[0]), 2) + Math.pow((color.Lab[1] - Lab[1]), 2) + Math.pow((color.Lab[2] - Lab[2]), 2);
 
-                    if (curr_dist < dist) {
-                        closest = color;
-                        dist = curr_dist;
-                    }
-                });
+                        if (curr_dist < dist) {
+                            closest = color;
+                            dist = curr_dist;
+                        }
+                    });
 
-                // overwrite current color with closest match based on rgb difference
-                data[j] = closest.rgb[0];
-                data[j + 1] = closest.rgb[1];
-                data[j + 2] = closest.rgb[2];
+                    // overwrite current color with closest match based on Lab distance
+                    data[j] = closest.rgb[0];
+                    data[j + 1] = closest.rgb[1];
+                    data[j + 2] = closest.rgb[2];
+                }
             }
+
+            // update canvas image 
+            ctx.putImageData(imgData, 0, 0, 0, 0, canvas.width, canvas.height);
+
+            // create base64 url
+            var base64_url = canvas.toDataURL();
+
+            // replace original src with base64 url
+            images[i].src = base64_url;
         }
-
-        // update canvas image 
-        ctx.putImageData(imgData, 0, 0, 0, 0, canvas.width, canvas.height);
-
-        // create base64 url
-        var base64_url = canvas.toDataURL();
-
-        // replace original src with base64 url
-        images[i].src = base64_url;
     }
 });
