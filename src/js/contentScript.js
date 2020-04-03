@@ -1,3 +1,7 @@
+function cacheSrc(src) {
+    
+}
+
 chrome.runtime.onMessage.addListener(function (message) {
     // ------------------- color constants --------------------------------------
     // Okabe & Ito
@@ -183,6 +187,16 @@ chrome.runtime.onMessage.addListener(function (message) {
     if (message.selected === "tol_light") {
         currPalette = TOL_LIGHT;
     }
+
+    let value = "Karen";
+
+    chrome.storage.local.set({key: value}, function() {
+        console.log('Value is set to ' + value);
+      });
+    
+      chrome.storage.local.get(['key'], function(result) {
+        console.log('Value currently is ' + result.key);
+    });
 
     let applyAll = message.applyAll
     // -------------------------------------------------------------------------
