@@ -167,77 +167,80 @@ rgbToLab = function (rgb) {
 }
 
 //----------------------------------------------------------------------------
-let currPalette = OKABE_ITO;
+// get cached prefernces
+chrome.storage.local.get(['applyAll'], function(settings) {
+    if (settings.applyAll) {
+        chrome.storage.local.get(['paletteSelected'], function(result) {
+            let currPalette;
 
-chrome.storage.local.get(['paletteSelected'], function(result) {
-    
-    switch (result.paletteSelected) {
-        case "okabe_ito":
-            currPalette = OKABE_ITO;
-            break;
-        case "tol_bright":
-            currPalette = TOL_BRIGHT;
-            break;
-        case "tol_muted":
-            currPalette = TOL_MUTED;
-            break;
-        case "tol_light":
-            currPalette = OKABE_ITO;
-            break;
-    }
-
-    // get all images
-    let images = document.getElementsByTagName('img');
-
-    for (let i = 0; i < images.length; i++) {
-        let image = images[i];
-
-        var canvas = document.createElement("canvas");
-        canvas.width = image.naturalWidth;
-        canvas.height = image.naturalHeight;
-
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(image, 0, 0);
-
-        var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        var data = imgData.data;
-
-        for (var j = 0; j < data.length; j += 4) {
-            let r = data[j], g = data[j + 1], b = data[j + 2];
-            let rgb = [r, g, b];
-            let Lab = rgbToLab(rgb);
-
-            let rg_diff = Math.abs(r - g), gb_diff = Math.abs(g - b), br_diff = Math.abs(b - r);
-
-            // if color isn't a shade of gray
-            if (rg_diff >= 15 || gb_diff >= 15 || br_diff >= 15) {
-                let closest, dist = Number.POSITIVE_INFINITY;
-
-                currPalette.forEach(color => {
-                    // compute distance
-                    let curr_dist = Math.pow((color.Lab[0] - Lab[0]), 2) + Math.pow((color.Lab[1] - Lab[1]), 2) + Math.pow((color.Lab[2] - Lab[2]), 2);
-
-                    if (curr_dist < dist) {
-                        closest = color;
-                        dist = curr_dist;
-                    }
-                });
-
-                // overwrite current color with closest match based on Lab distance
-                data[j] = closest.rgb[0];
-                data[j + 1] = closest.rgb[1];
-                data[j + 2] = closest.rgb[2];
+            switch (result.paletteSelected) {
+                case "okabe_ito":
+                    currPalette = OKABE_ITO;
+                    break;
+                case "tol_bright":
+                    currPalette = TOL_BRIGHT;
+                    break;
+                case "tol_muted":
+                    currPalette = TOL_MUTED;
+                    break;
+                case "tol_light":
+                    currPalette = OKABE_ITO;
+                    break;
             }
-        }
 
-        // update canvas image 
-        ctx.putImageData(imgData, 0, 0, 0, 0, canvas.width, canvas.height);
+            // get all images
+            let images = document.getElementsByTagName('img');
 
-        // create base64 url
-        var base64_url = canvas.toDataURL();
+            for (let i = 0; i < images.length; i++) {
+                let image = images[i];
 
-        // replace original src with base64 url
-        images[i].src = base64_url;
+                var canvas = document.createElement("canvas");
+                canvas.width = image.naturalWidth;
+                canvas.height = image.naturalHeight;
+
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(image, 0, 0);
+
+                var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                var data = imgData.data;
+
+                for (var j = 0; j < data.length; j += 4) {
+                    let r = data[j], g = data[j + 1], b = data[j + 2];
+                    let rgb = [r, g, b];
+                    let Lab = rgbToLab(rgb);
+
+                    let rg_diff = Math.abs(r - g), gb_diff = Math.abs(g - b), br_diff = Math.abs(b - r);
+
+                    // if color isn't a shade of gray
+                    if (rg_diff >= 15 || gb_diff >= 15 || br_diff >= 15) {
+                        let closest, dist = Number.POSITIVE_INFINITY;
+
+                        currPalette.forEach(color => {
+                            // compute distance
+                            let curr_dist = Math.pow((color.Lab[0] - Lab[0]), 2) + Math.pow((color.Lab[1] - Lab[1]), 2) + Math.pow((color.Lab[2] - Lab[2]), 2);
+
+                            if (curr_dist < dist) {
+                                closest = color;
+                                dist = curr_dist;
+                            }
+                        });
+
+                        // overwrite current color with closest match based on Lab distance
+                        data[j] = closest.rgb[0];
+                        data[j + 1] = closest.rgb[1];
+                        data[j + 2] = closest.rgb[2];
+                    }
+                }
+
+                // update canvas image 
+                ctx.putImageData(imgData, 0, 0, 0, 0, canvas.width, canvas.height);
+
+                // create base64 url
+                var base64_url = canvas.toDataURL();
+
+                // replace original src with base64 url
+                images[i].src = base64_url;
+            }
+        });
     }
-     
 });
