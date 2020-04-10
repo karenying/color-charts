@@ -213,6 +213,11 @@ filter = function (image, palette) {
 
     return base64_url;
 }
+
+isFiltered = function(image) {
+    return image.src.startsWith('data:/image/png:base64');
+}
+
 //----------------------------------------------------------------------------
 // get cached prefernces
 chrome.storage.local.get(['applyAll'], function (settings) {
@@ -251,13 +256,11 @@ chrome.storage.local.get(['applyAll'], function (settings) {
     // selective filtering on
     else {
         chrome.runtime.onMessage.addListener(function (message) {
-            console.log(message);
             let images = document.getElementsByTagName('img');
 
             for (let i = 0; i < images.length; i++) {
                 let image = images[i], currPalette;
                 if (image.src === message.url) {
-
                     switch (message.palette) {
                         case "Okabe and Ito":
                             currPalette = OKABE_ITO;
@@ -275,7 +278,6 @@ chrome.storage.local.get(['applyAll'], function (settings) {
                     let base64_url = filter(image, currPalette);
                     images[i].src = base64_url;
                 }
-                
             }
             return true;
         });
