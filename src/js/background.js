@@ -1,45 +1,45 @@
-chrome.contextMenus.create({
-    title: 'Color Charts',
-    contexts: ['image'],
-    id: 'parent'
+// filter image
+function filter(info, tab) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { url: info.srcUrl, palette: info.menuItemId }, function (response) { });
+    });
+}
+
+// create menu
+function createMenu() {
+    const titles = ['None', 'Okabe and Ito', 'Tol (bright)', 'Tol (muted)', 'Tol (light)'];
+
+    for (let i = 0; i < titles.length; i++) {
+        chrome.contextMenus.create({
+            title: titles[i],
+            type: "radio",
+            id: titles[i],
+            contexts: ['image'],
+            checked: false,
+            onclick: filter
+        });
+    }
+}
+
+// get cached setting for first load
+chrome.storage.local.get(['applyAll'], function(settings) {
+    if (!settings.applyAll) {
+        createMenu();
+    }
 });
 
-chrome.contextMenus.create({
-    title: 'None',
-    type: "radio",
-    contexts: ['image'],
-    parentId: 'parent',
-    checked: true,
-});
-
-chrome.contextMenus.create({
-    title: 'Okabe and Ito',
-    type: "radio",
-    contexts: ['image'],
-    parentId: 'parent',
-    checked: false,
-});
-
-chrome.contextMenus.create({
-    title: 'Tol (bright)',
-    type: "radio",
-    contexts: ['image'],
-    parentId: 'parent',
-    checked: false
-});
-
-chrome.contextMenus.create({
-    title: 'Tol (muted)',
-    type: "radio",
-    contexts: ['image'],
-    parentId: 'parent',
-    checked: false,
-});
-
-chrome.contextMenus.create({
-    title: 'Tol (light)',
-    type: "radio",
-    contexts: ['image'],
-    parentId: 'parent',
-    checked: false,
+// update based on change
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+    if (namespace === 'local') {
+        for (let key in changes) {
+            if (key === 'applyAll') {
+                let curr_applyAll = changes[key].newValue;
+                if (!curr_applyAll) {
+                    createMenu();
+                } else {
+                    chrome.contextMenus.removeAll();
+                }
+            }
+        }
+    }
 });

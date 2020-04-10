@@ -39,8 +39,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // update preferences on click
     checkbox.onclick = function () {
         chrome.storage.local.set({'applyAll': checkbox.checked}, function() {
+            let value = checkbox.checked ? "on" : "off";
             console.log("Apply all turned " + value + ".");
         });
     }
-    
+
 }, false);
