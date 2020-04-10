@@ -120,14 +120,16 @@ input:checked + .slider:before {
 }
 
 .footer {
-    margin-top: 10px;
+    position:relative;
 }
 
-.footer p {
-    text-align: right;
+.footer-content {
+    margin: 5px 0px 15px;
+    position: absolute;
+    right: 0px;
 }
 
-.footer p:hover {
+.footer-content p:hover {
     color: #3B88FD;
     cursor: pointer;
     text-decoration: underline;
