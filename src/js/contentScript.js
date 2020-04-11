@@ -168,6 +168,7 @@ rgbToLab = function (rgb) {
 
 // filter an image with given palette
 filter = function (image, palette) {
+    // create canvas
     var canvas = document.createElement("canvas");
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
@@ -175,6 +176,7 @@ filter = function (image, palette) {
     var ctx = canvas.getContext("2d");
     ctx.drawImage(image, 0, 0);
 
+    // draw image
     var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     var data = imgData.data;
 
@@ -343,6 +345,7 @@ chrome.storage.local.get(['applyAll'], function (settings) {
 }); 
 
 //----------------------------------------------------------------------------
+// deal with on change
 chrome.storage.onChanged.addListener(function(changes, namespace) {
     if (namespace === 'local') {
         for (let key in changes) {
