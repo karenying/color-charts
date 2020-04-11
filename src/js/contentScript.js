@@ -166,6 +166,7 @@ rgbToLab = function (rgb) {
     return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
 }
 
+// filter an image with given palette
 filter = function (image, palette) {
     var canvas = document.createElement("canvas");
     canvas.width = image.naturalWidth;
@@ -214,72 +215,166 @@ filter = function (image, palette) {
     return base64_url;
 }
 
+// check if image is filtered
 isFiltered = function(image) {
-    return image.src.startsWith('data:/image/png:base64');
+    return image.src.startsWith('data');
+}
+
+// cache the orignal image links of the page before filtering
+cacheOriginalImages = function() {
+    let links = [];
+    let images = document.getElementsByTagName('img');
+
+    for (let i = 0; i < images.length; i++) {
+        if (!isFiltered(images[i])) {
+            links.push(images[i].src);
+        } else {
+            links.push(null);
+        }
+    }
+
+    chrome.storage.local.set({'originalLinks': links}, function() {
+        console.log("Original images cached");
+    });
+}
+
+// reset to original page
+resetToOriginalImages = function() {
+    // retrieve original links
+    chrome.storage.local.get(['originalLinks'], function (cache) {
+        let images = document.getElementsByTagName('img');
+        
+        // check if arrays are the same length
+        if (images.length = cache.originalLinks.length) {
+            for (let i = 0; i < images.length; i++) {
+                // if image is filtered, revert it
+                if (isFiltered(images[i]) && cache.originalLinks[i] !== null) {
+                    images[i].src = cache.originalLinks[i];
+                }
+            }
+        }
+        
+    });
+
+    // clear cache
+    chrome.storage.local.set({'originalLinks': []}, function() {
+        console.log("Cache cleared.");
+    });
+}
+
+// apply selective filtering
+selectivelyFilter = function() {
+    // listen to messages from background.js for context menu clicks
+    chrome.runtime.onMessage.addListener(function (message) {
+        let images = document.getElementsByTagName('img');
+
+        for (let i = 0; i < images.length; i++) {
+            let image = images[i], currPalette;
+            if (image.src === message.url) {
+                switch (message.palette) {
+                    case "Okabe and Ito":
+                        currPalette = OKABE_ITO;
+                        break;
+                    case "Tol (bright)":
+                        currPalette = TOL_BRIGHT;
+                        break;
+                    case "Tol (muted)":
+                        currPalette = TOL_MUTED;
+                        break;
+                    case "Tol (light)":
+                        currPalette = OKABE_ITO;
+                        break;
+                }
+                let base64_url = filter(image, currPalette);
+                images[i].src = base64_url;
+            }
+        }
+        return Promise.all('Go away error message!!');
+    });
+}
+
+// filter all the images on the page
+filterAll = function(palette) {
+    let currPalette;
+
+    switch (palette) {
+        case "okabe_ito":
+            currPalette = OKABE_ITO;
+            break;
+        case "tol_bright":
+            currPalette = TOL_BRIGHT;
+            break;
+        case "tol_muted":
+            currPalette = TOL_MUTED;
+            break;
+        case "tol_light":
+            currPalette = OKABE_ITO;
+            break;
+    }
+
+    // cache original images
+    cacheOriginalImages();
+
+    // get all images
+    let images = document.getElementsByTagName('img');
+
+    for (let i = 0; i < images.length; i++) {
+        let image = images[i];
+
+        let base64_url = filter(image, currPalette);
+        images[i].src = base64_url;
+    }
 }
 
 //----------------------------------------------------------------------------
-// get cached prefernces
+// get cached prefernces for first load
+
 chrome.storage.local.get(['applyAll'], function (settings) {
     // apply all setting on
     if (settings.applyAll) {
         chrome.storage.local.get(['paletteSelected'], function (result) {
-            let currPalette;
-
-            switch (result.paletteSelected) {
-                case "okabe_ito":
-                    currPalette = OKABE_ITO;
-                    break;
-                case "tol_bright":
-                    currPalette = TOL_BRIGHT;
-                    break;
-                case "tol_muted":
-                    currPalette = TOL_MUTED;
-                    break;
-                case "tol_light":
-                    currPalette = OKABE_ITO;
-                    break;
-            }
-
-            // get all images
-            let images = document.getElementsByTagName('img');
-
-            for (let i = 0; i < images.length; i++) {
-                let image = images[i];
-
-                let base64_url = filter(image, currPalette);
-
-                images[i].src = base64_url;
-            }
+            filterAll(result.paletteSelected);
         });
     }
     // selective filtering on
     else {
-        chrome.runtime.onMessage.addListener(function (message) {
-            let images = document.getElementsByTagName('img');
+        selectivelyFilter();
+    }
+}); 
 
-            for (let i = 0; i < images.length; i++) {
-                let image = images[i], currPalette;
-                if (image.src === message.url) {
-                    switch (message.palette) {
-                        case "Okabe and Ito":
-                            currPalette = OKABE_ITO;
-                            break;
-                        case "tol_bright":
-                            currPalette = TOL_BRIGHT;
-                            break;
-                        case "tol_muted":
-                            currPalette = TOL_MUTED;
-                            break;
-                        case "tol_light":
-                            currPalette = OKABE_ITO;
-                            break;
-                    }
-                    let base64_url = filter(image, currPalette);
-                    images[i].src = base64_url;
+//----------------------------------------------------------------------------
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+    if (namespace === 'local') {
+        for (let key in changes) {
+            // check for toggle change
+            if (key === 'applyAll') {
+                let curr_applyAll = changes[key].newValue;
+                // toggle from on --> off, selective filtering on
+                if (!curr_applyAll) {
+                    // remove filters
+                    chrome.storage.local.get(['originalLinks'], function (cache) {
+                        if (cache.originalLinks.length > 0) {
+                            resetToOriginalImages();
+                        }
+                    });
+                    selectivelyFilter();
+                } 
+                // toggle from off --> on
+                else {
+                    chrome.storage.local.get(['paletteSelected'], function (result) {
+                        filterAll(result.paletteSelected);
+                    });
                 }
             }
-            return true;
-        });
+            // check for palette change
+            else if (key === 'paletteSelected') {
+                chrome.storage.local.get(['applyAll'], function (settings) {
+                    if (settings.applyAll) {
+                        resetToOriginalImages();
+                        filterAll(changes[key].newValue);
+                    }
+                });
+            }
+        }
     }
 });

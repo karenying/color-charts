@@ -1,5 +1,5 @@
 // filter image
-filter = function (info, tab) {
+sendMessage = function (info, tab) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { url: info.srcUrl, palette: info.menuItemId }, function (response) { });
         return Promise.all('Go away error message!!');
@@ -17,7 +17,7 @@ createMenu = function () {
             id: titles[i],
             contexts: ['image'],
             checked: false,
-            onclick: filter
+            onclick: sendMessage,
         });
     }
 }
