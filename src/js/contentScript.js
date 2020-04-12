@@ -184,7 +184,7 @@ const TOL_LIGHT = [
 
 // ------------------- helper methods --------------------------------------
 rgbToLab = function (rgb) {
-    var r = rgb[0] / 255,
+    let r = rgb[0] / 255,
         g = rgb[1] / 255,
         b = rgb[2] / 255,
         x,
@@ -209,21 +209,21 @@ rgbToLab = function (rgb) {
 // filter an image with given palette
 filter = function (image, palette) {
     // create canvas
-    var canvas = document.createElement('canvas');
+    let canvas = document.createElement('canvas');
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
 
-    var ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d');
     ctx.drawImage(image, 0, 0);
 
     // draw image
-    var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    var data = imgData.data;
+    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let data = imgData.data;
 
-    for (var j = 0; j < data.length; j += 4) {
-        let r = data[j],
-            g = data[j + 1],
-            b = data[j + 2];
+    for (let i = 0; i < data.length; i += 4) {
+        let r = data[i],
+            g = data[i + 1],
+            b = data[i + 2];
         let rgb = [r, g, b];
         let Lab = rgbToLab(rgb);
 
@@ -250,9 +250,9 @@ filter = function (image, palette) {
             });
 
             // overwrite current color with closest match based on Lab distance
-            data[j] = closest.rgb[0];
-            data[j + 1] = closest.rgb[1];
-            data[j + 2] = closest.rgb[2];
+            data[i] = closest.rgb[0];
+            data[i + 1] = closest.rgb[1];
+            data[i + 2] = closest.rgb[2];
         }
     }
 
@@ -260,7 +260,7 @@ filter = function (image, palette) {
     ctx.putImageData(imgData, 0, 0, 0, 0, canvas.width, canvas.height);
 
     // create base64 url
-    var base64_url = canvas.toDataURL();
+    let base64_url = canvas.toDataURL();
 
     return base64_url;
 };
@@ -378,7 +378,6 @@ filterAll = function (palette) {
 
 //----------------------------------------------------------------------------
 // get cached prefernces for first load
-
 chrome.storage.local.get(['applyAll'], function (settings) {
     // apply all setting on
     if (settings.applyAll) {
