@@ -1,100 +1,230 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+    <head>
+        <title>Color Charts</title>
+        <script src="./js/popup.js"></script>
+        <link rel="stylesheet" href="./css/popup.css" />
+    </head>
 
-<head>
-    <title>Color Charts</title>
-    <script src="./js/popup.js"></script>
-    <link rel="stylesheet" href="./css/popup.css">
-</head>
-
-<body>
-    <div class="popup-container">
-        <div class="header">
-            <img src="./assets/icon128.png">
-            <h1>Color Charts</h1>
-        </div>
-        <hr>
-        <div class="palette">
-            <form name="form">
-                <div class="palette-option">
-                    <input type="radio" id="okabe_ito" value="okabe_ito" name="palette">
-                    <label for="okabe_ito">
-                        <h3 style="padding-right: 15px">Okabe & Ito</h3>
-                    </label><br>
-                    <span class="color-circle" style="background-color: #E69F00"></span>
-                    <span class="color-circle" style="background-color: #56B4E9"></span>
-                    <span class="color-circle" style="background-color: #009E73"></span>
-                    <span class="color-circle" style="background-color: #F0E442"></span>
-                    <span class="color-circle" style="background-color: #0072B2"></span>
-                    <span class="color-circle" style="background-color: #D55E00"></span>
-                    <span class="color-circle" style="background-color: #CC79A7"></span>
-                    <span class="color-circle" style="background-color: #000000"></span>
-                </div>
-                <div class="palette-option">
-                    <input type="radio" id="tol_bright" value="tol_bright" name="palette">
-                    <label for="tol_bright">
-                        <h3 style="padding-right: 21px">Tol (bright)</h3>
-                    </label><br>
-                    <span class="color-circle" style="background-color: #EE6677"></span>
-                    <span class="color-circle" style="background-color: #228833"></span>
-                    <span class="color-circle" style="background-color: #4477AA"></span>
-                    <span class="color-circle" style="background-color: #CCBB44"></span>
-                    <span class="color-circle" style="background-color: #66CCEE"></span>
-                    <span class="color-circle" style="background-color: #AA3377"></span>
-                    <span class="color-circle" style="background-color: #BBBBBB"></span>
-                </div>
-                <div class="palette-option">
-                    <input type="radio" id="tol_muted" value="tol_muted" name="palette">
-                    <label for="tol_muted">
-                        <h3 style="padding-right: 17px">Tol (muted)</h3>
-                    </label><br>
-                    <span class="color-circle" style="background-color: #88CCEE"></span>
-                    <span class="color-circle" style="background-color: #44AA99"></span>
-                    <span class="color-circle" style="background-color: #117733"></span>
-                    <span class="color-circle" style="background-color: #332288"></span>
-                    <span class="color-circle" style="background-color: #DDCC77"></span>
-                    <span class="color-circle" style="background-color: #999933"></span>
-                    <span class="color-circle" style="background-color: #CC6677"></span>
-                    <span class="color-circle" style="background-color: #882255"></span>
-                    <span class="color-circle" style="background-color: #AA4499"></span>
-                    <span class="color-circle" style="background-color: #DDDDDD"></span>
-                </div>
-                <div class="palette-option">
-                    <input type="radio" id="tol_light" value="tol_light" name="palette">
-                    <label for="tol_light">
-                        <h3 style="padding-right: 32px">Tol (light)</h3>
-                    </label><br>
-                    <span class="color-circle" style="background-color: #BBCC33"></span>
-                    <span class="color-circle" style="background-color: #AAAA00"></span>
-                    <span class="color-circle" style="background-color: #77AADD"></span>
-                    <span class="color-circle" style="background-color: #EE8866"></span>
-                    <span class="color-circle" style="background-color: #EEDD88"></span>
-                    <span class="color-circle" style="background-color: #FFAABB"></span>
-                    <span class="color-circle" style="background-color: #99DDFF"></span>
-                    <span class="color-circle" style="background-color: #44BB99"></span>
-                    <span class="color-circle" style="background-color: #DDDDDD"></span>
-                </div>
-            </form>
-        </div>
-        <hr>
-        <div class="apply">
-            <label>
-                <h3 style="padding-right: 32px">Apply to all images on page</h3>
-            </label>
-            <div class="toggle">
-                <label class="switch">
-                    <input type="checkbox" name="apply">
-                    <span class="slider round"></span>
+    <body>
+        <div class="popup-container">
+            <div class="header">
+                <img src="./assets/icon128.png" />
+                <h1>Color Charts</h1>
+            </div>
+            <hr />
+            <div class="palette">
+                <form name="form">
+                    <div class="palette-option">
+                        <input
+                            type="radio"
+                            id="okabe_ito"
+                            value="okabe_ito"
+                            name="palette"
+                        />
+                        <label for="okabe_ito">
+                            <h3 style="padding-right: 15px;">
+                                Okabe & Ito
+                            </h3> </label
+                        ><br />
+                        <span
+                            class="color-circle"
+                            style="background-color: #e69f00;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #56b4e9;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #009e73;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #f0e442;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #0072b2;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #d55e00;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #cc79a7;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #000000;"
+                        ></span>
+                    </div>
+                    <div class="palette-option">
+                        <input
+                            type="radio"
+                            id="tol_bright"
+                            value="tol_bright"
+                            name="palette"
+                        />
+                        <label for="tol_bright">
+                            <h3 style="padding-right: 21px;">
+                                Tol (bright)
+                            </h3> </label
+                        ><br />
+                        <span
+                            class="color-circle"
+                            style="background-color: #ee6677;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #228833;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #4477aa;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #ccbb44;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #66ccee;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #aa3377;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #bbbbbb;"
+                        ></span>
+                    </div>
+                    <div class="palette-option">
+                        <input
+                            type="radio"
+                            id="tol_muted"
+                            value="tol_muted"
+                            name="palette"
+                        />
+                        <label for="tol_muted">
+                            <h3 style="padding-right: 17px;">
+                                Tol (muted)
+                            </h3> </label
+                        ><br />
+                        <span
+                            class="color-circle"
+                            style="background-color: #88ccee;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #44aa99;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #117733;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #332288;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #ddcc77;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #999933;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #cc6677;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #882255;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #aa4499;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #dddddd;"
+                        ></span>
+                    </div>
+                    <div class="palette-option">
+                        <input
+                            type="radio"
+                            id="tol_light"
+                            value="tol_light"
+                            name="palette"
+                        />
+                        <label for="tol_light">
+                            <h3 style="padding-right: 32px;">
+                                Tol (light)
+                            </h3> </label
+                        ><br />
+                        <span
+                            class="color-circle"
+                            style="background-color: #bbcc33;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #aaaa00;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #77aadd;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #ee8866;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #eedd88;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #ffaabb;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #99ddff;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #44bb99;"
+                        ></span>
+                        <span
+                            class="color-circle"
+                            style="background-color: #dddddd;"
+                        ></span>
+                    </div>
+                </form>
+            </div>
+            <hr />
+            <div class="apply">
+                <label>
+                    <h3 style="padding-right: 32px;">
+                        Apply to all images on page
+                    </h3>
                 </label>
+                <div class="toggle">
+                    <label class="switch">
+                        <input type="checkbox" name="apply" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <hr />
+            <div class="footer">
+                <div class="footer-content">
+                    <p id="about">About this extension</p>
+                </div>
             </div>
         </div>
-        <hr>
-        <div class="footer">
-            <div class="footer-content">
-                <p id="about">About this extension</p>
-            </div>
-        </div>
-    </div>
-</body>
-
+    </body>
 </html>
