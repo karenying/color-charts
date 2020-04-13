@@ -40,3 +40,13 @@ hr {
     background: #d9d9d9;
     margin: 23px 0;
 }
+
+a {
+    color: #3b88fd;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    text-decoration: underline;
+}
