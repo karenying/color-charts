@@ -341,8 +341,6 @@ filter = function (image, palette) {
         }
     }
 
-    console.log(colorMap);
-
     // index for iterating through palette
     let i = 0;
     for (let colorWheelColor in colorMap) {
@@ -351,10 +349,11 @@ filter = function (image, palette) {
             colorMap[colorWheelColor] = palette[i].rgb;
             i++;
         } else {
-            colorMap[colorWheelColor] = [0, 0, 0];
+            colorMap[colorWheelColor] = [255, 255, 255];
         }
     }
 
+    // recolor using colorMap and palette colors
     for (let i = 0; i < data.length; i += 4) {
         let r = data[i],
             g = data[i + 1],
@@ -453,7 +452,7 @@ selectivelyFilter = function () {
                 images[i].src = base64_url;
             }
         }
-        return Promise.all('Go away error message!!');
+        return true;
     });
 };
 
@@ -545,4 +544,5 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
             }
         }
     }
+    return true;
 });
