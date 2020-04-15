@@ -1,4 +1,80 @@
 // ------------------- color constants --------------------------------------
+// Color wheel
+const CW_RED = {
+    rgb: [255, 0, 0],
+    Lab: [53.23288178584245, 80.10930952982204, 67.22006831026425],
+};
+
+const CW_ORANGE = {
+    rgb: [255, 127, 0],
+    Lab: [66.853804382266, 43.32394349110946, 73.90977076096983],
+};
+
+const CW_YELLOW = {
+    rgb: [255, 255, 0],
+    Lab: [97.13824698129729, -21.555908334832285, 94.48248544644461],
+};
+
+const CW_LIGHT_GREEN = {
+    rgb: [127, 255, 0],
+    Lab: [89.87420853068859, -68.06912800112336, 85.7823696705245],
+};
+
+const CW_GREEN = {
+    rgb: [0, 255, 0],
+    Lab: [87.73703347354422, -86.1846364976253, 83.18116474777854],
+};
+
+const CW_TURQUOISE = {
+    rgb: [0, 255, 127],
+    Lab: [88.47265520282772, -76.90097301637367, 47.0252935988744],
+};
+
+const CW_CYAN = {
+    rgb: [0, 255, 255],
+    Lab: [91.11652110946342, -48.079618466228766, -14.138127754846131],
+};
+
+const CW_LIGHT_BLUE = {
+    rgb: [0, 127, 255],
+    Lab: [54.44754715922328, 19.4140731865301, -71.36367783765967],
+};
+
+const CW_BLUE = {
+    rgb: [0, 0, 255],
+    Lab: [32.302586667249486, 79.19666178930935, -107.8636810449517],
+};
+
+const CW_PURPLE = {
+    rgb: [127, 0, 255],
+    Lab: [40.78700884794503, 83.10852255459103, -93.50954337949518],
+};
+
+const CW_MAGENTA = {
+    rgb: [255, 0, 255],
+    Lab: [60.319933664076004, 98.25421868616108, -60.84298422386232],
+};
+
+const CW_PINK = {
+    rgb: [255, 0, 127],
+    Lab: [54.857758849253244, 84.48066810163252, 4.62720489978099],
+};
+
+const COLOR_WHEEL = [
+    CW_RED,
+    CW_ORANGE,
+    CW_YELLOW,
+    CW_LIGHT_GREEN,
+    CW_GREEN,
+    CW_TURQUOISE,
+    //CW_CYAN,
+    CW_LIGHT_BLUE,
+    CW_BLUE,
+    CW_PURPLE,
+    CW_MAGENTA,
+    CW_PINK,
+];
+
 // Okabe & Ito
 const OI_ORANGE = {
     rgb: [230, 159, 0],
@@ -141,44 +217,44 @@ const TL_GREEN = {
 
 const OKABE_ITO = [
     OI_ORANGE,
+    OI_PINK,
     OI_LIGHT_BLUE,
     OI_GREEN,
     OI_YELLOW,
-    OI_RED,
     OI_DARK_BLUE,
-    OI_PINK,
+    OI_RED,
     BLACK,
 ];
 const TOL_BRIGHT = [
+    TB_DARK_BLUE,
     TB_PINK,
     TB_GREEN,
-    TB_DARK_BLUE,
     TB_YELLOW,
     TB_LIGHT_BLUE,
     TB_PURPLE,
     TB_GRAY,
 ];
 const TOL_MUTED = [
-    TM_LIGHT_BLUE,
-    TM_GREEN,
-    TM_DARK_GREEN,
+    TM_DARK_PINK,
     TM_DARK_BLUE,
     TM_YELLOW,
-    TM_DARK_YELLOW,
+    TM_DARK_GREEN,
+    TM_LIGHT_BLUE,
     TM_PINK,
-    TM_DARK_PINK,
+    TM_GREEN,
+    TM_DARK_YELLOW,
     TM_PURPLE,
     GRAY,
 ];
 const TOL_LIGHT = [
-    TL_LIGHT_GREEN,
-    TL_DARK_GREEN,
     TL_BLUE,
     TL_RED,
     TL_YELLOW,
     TL_PINK,
     TL_LIGHT_BLUE,
     TL_GREEN,
+    TL_LIGHT_GREEN,
+    TL_DARK_GREEN,
     GRAY,
 ];
 
@@ -220,6 +296,8 @@ filter = function (image, palette) {
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let data = imgData.data;
 
+    let colorMap = {};
+
     for (let i = 0; i < data.length; i += 4) {
         let r = data[i],
             g = data[i + 1],
@@ -236,7 +314,7 @@ filter = function (image, palette) {
             let closest,
                 dist = Number.POSITIVE_INFINITY;
 
-            palette.forEach((color) => {
+            COLOR_WHEEL.forEach((color) => {
                 // compute distance
                 let curr_dist =
                     Math.pow(color.Lab[0] - Lab[0], 2) +
@@ -249,10 +327,46 @@ filter = function (image, palette) {
                 }
             });
 
+            let closestToString = closest.rgb.join('-');
+            // if color hasn't been seen yet add it to the map
+            if (!colorMap.hasOwnProperty(closestToString)) {
+                colorMap[closestToString] = 1;
+            } else {
+                colorMap[closestToString]++;
+            }
             // overwrite current color with closest match based on Lab distance
             data[i] = closest.rgb[0];
             data[i + 1] = closest.rgb[1];
             data[i + 2] = closest.rgb[2];
+        }
+    }
+
+    console.log(colorMap);
+
+    // index for iterating through palette
+    let i = 0;
+    for (let colorWheelColor in colorMap) {
+        // check if it's a significant color
+        if (colorMap[colorWheelColor] > 500) {
+            colorMap[colorWheelColor] = palette[i].rgb;
+            i++;
+        } else {
+            colorMap[colorWheelColor] = [0, 0, 0];
+        }
+    }
+
+    for (let i = 0; i < data.length; i += 4) {
+        let r = data[i],
+            g = data[i + 1],
+            b = data[i + 2];
+        let rgb = [r, g, b];
+
+        let rgbToString = rgb.join('-');
+        if (colorMap.hasOwnProperty(rgbToString)) {
+            let reColor = colorMap[rgbToString];
+            data[i] = reColor[0];
+            data[i + 1] = reColor[1];
+            data[i + 2] = reColor[2];
         }
     }
 
