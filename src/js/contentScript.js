@@ -218,13 +218,14 @@ const TL_GREEN = {
 const OKABE_ITO = [
     OI_ORANGE,
     OI_PINK,
-    OI_LIGHT_BLUE,
-    OI_GREEN,
     OI_YELLOW,
+    OI_GREEN,
     OI_DARK_BLUE,
+    OI_LIGHT_BLUE,
     OI_RED,
     BLACK,
 ];
+
 const TOL_BRIGHT = [
     TB_DARK_BLUE,
     TB_PINK,
@@ -234,6 +235,7 @@ const TOL_BRIGHT = [
     TB_PURPLE,
     TB_GRAY,
 ];
+
 const TOL_MUTED = [
     TM_DARK_PINK,
     TM_DARK_BLUE,
@@ -246,6 +248,7 @@ const TOL_MUTED = [
     TM_PURPLE,
     GRAY,
 ];
+
 const TOL_LIGHT = [
     TL_BLUE,
     TL_RED,
@@ -280,6 +283,18 @@ rgbToLab = function (rgb) {
     z = z > 0.008856 ? Math.pow(z, 1 / 3) : 7.787 * z + 16 / 116;
 
     return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
+};
+
+// Randomize array in-place using Durstenfeld shuffle algorithm
+shuffleArray = function (array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    return array;
 };
 
 // filter an image with given palette
@@ -343,10 +358,11 @@ filter = function (image, palette) {
 
     // index for iterating through palette
     let i = 0;
+    let shuffledPalette = shuffleArray(palette);
     for (let colorWheelColor in colorMap) {
         // check if it's a significant color
         if (colorMap[colorWheelColor] > 500) {
-            colorMap[colorWheelColor] = palette[i].rgb;
+            colorMap[colorWheelColor] = shuffledPalette[i].rgb;
             i++;
         } else {
             colorMap[colorWheelColor] = [255, 255, 255];
