@@ -447,7 +447,7 @@ selectivelyFilter = function () {
                         currPalette = TOL_MUTED;
                         break;
                     case 'Tol (light)':
-                        currPalette = OKABE_ITO;
+                        currPalette = TOL_LIGHT;
                         break;
                 }
 
@@ -474,7 +474,7 @@ filterAll = function (palette) {
             currPalette = TOL_MUTED;
             break;
         case 'tol_light':
-            currPalette = OKABE_ITO;
+            currPalette = TOL_LIGHT;
             break;
     }
 
