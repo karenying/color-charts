@@ -402,7 +402,7 @@ cacheOriginalImages = function () {
 };
 
 // reset to original page
-resetToOriginalImages = function (callback) {
+resetToOriginalImages = function () {
     // retrieve original links
     chrome.storage.local.get(['originalLinks'], function (cache) {
         let images = document.getElementsByTagName('img');
@@ -412,8 +412,9 @@ resetToOriginalImages = function (callback) {
             for (let i = 0; i < images.length; i++) {
                 // if image is filtered, revert it
                 if (isFiltered(images[i]) && cache.originalLinks[i] !== null) {
-                    images[i].src = cache.originalLinks[i];
-                    console.log(document.getElementsByTagName('img'));
+                    let img = new Image();
+                    img.src = cache.originalLinks[i];
+                    images[i] = img;
                 }
             }
         }
@@ -422,8 +423,6 @@ resetToOriginalImages = function (callback) {
         chrome.storage.local.set({ originalLinks: [] }, function () {
             console.log('Cache cleared.');
         });
-
-        callback();
     });
 };
 
@@ -451,6 +450,7 @@ selectivelyFilter = function () {
                         currPalette = OKABE_ITO;
                         break;
                 }
+
                 let base64_url = filter(image, currPalette);
                 images[i].src = base64_url;
             }
@@ -539,9 +539,8 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
             else if (key === 'paletteSelected') {
                 chrome.storage.local.get(['applyAll'], function (settings) {
                     if (settings.applyAll) {
-                        resetToOriginalImages(function () {
-                            filterAll(changes[key].newValue);
-                        });
+                        resetToOriginalImages();
+                        filterAll(changes[key].newValue);
                     }
                 });
             }
