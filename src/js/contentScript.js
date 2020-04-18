@@ -402,7 +402,7 @@ cacheOriginalImages = function () {
 };
 
 // reset to original page
-resetToOriginalImages = function () {
+resetToOriginalImages = function (callback) {
     // retrieve original links
     chrome.storage.local.get(['originalLinks'], function (cache) {
         let images = document.getElementsByTagName('img');
@@ -413,14 +413,17 @@ resetToOriginalImages = function () {
                 // if image is filtered, revert it
                 if (isFiltered(images[i]) && cache.originalLinks[i] !== null) {
                     images[i].src = cache.originalLinks[i];
+                    console.log(document.getElementsByTagName('img'));
                 }
             }
         }
-    });
 
-    // clear cache
-    chrome.storage.local.set({ originalLinks: [] }, function () {
-        console.log('Cache cleared.');
+        // clear cache
+        chrome.storage.local.set({ originalLinks: [] }, function () {
+            console.log('Cache cleared.');
+        });
+
+        callback();
     });
 };
 
@@ -483,7 +486,6 @@ filterAll = function (palette) {
 
     for (let i = 0; i < images.length; i++) {
         let image = images[i];
-
         let base64_url = filter(image, currPalette);
         images[i].src = base64_url;
     }
@@ -537,8 +539,9 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
             else if (key === 'paletteSelected') {
                 chrome.storage.local.get(['applyAll'], function (settings) {
                     if (settings.applyAll) {
-                        resetToOriginalImages();
-                        filterAll(changes[key].newValue);
+                        resetToOriginalImages(function () {
+                            filterAll(changes[key].newValue);
+                        });
                     }
                 });
             }
