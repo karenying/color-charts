@@ -299,7 +299,11 @@ shuffleArray = function (array) {
 
 // filter an image with given palette
 filter = function (image, palette) {
+    console.log('filtering');
+    console.log(image.src);
     // create canvas
+    console.log(image);
+
     let canvas = document.createElement('canvas');
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
@@ -401,6 +405,11 @@ isFiltered = function (image) {
 
 // cache the orignal image links of the page before filtering
 cacheOriginalImages = function () {
+    // clear cache
+    chrome.storage.local.set({ originalLinks: [] }, function () {
+        console.log('Cache cleared.');
+    });
+
     let links = [];
     let images = document.getElementsByTagName('img');
 
@@ -418,7 +427,7 @@ cacheOriginalImages = function () {
 };
 
 // reset to original page
-resetToOriginalImages = function () {
+resetToOriginalImages = function (callback) {
     // retrieve original links
     chrome.storage.local.get(['originalLinks'], function (cache) {
         let images = document.getElementsByTagName('img');
@@ -428,17 +437,13 @@ resetToOriginalImages = function () {
             for (let i = 0; i < images.length; i++) {
                 // if image is filtered, revert it
                 if (isFiltered(images[i]) && cache.originalLinks[i] !== null) {
-                    let img = new Image();
-                    img.src = cache.originalLinks[i];
-                    images[i] = img;
+                    images[i] = new Image();
+                    images[i].src = cache.originalLinks[i];
+                    console.log('reverting');
                 }
             }
         }
-
-        // clear cache
-        chrome.storage.local.set({ originalLinks: [] }, function () {
-            console.log('Cache cleared.');
-        });
+        callback();
     });
 };
 
@@ -502,6 +507,7 @@ filterAll = function (palette) {
 
     for (let i = 0; i < images.length; i++) {
         let image = images[i];
+
         let base64_url = filter(image, currPalette);
         images[i].src = base64_url;
     }
@@ -555,8 +561,9 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
             else if (key === 'paletteSelected') {
                 chrome.storage.local.get(['applyAll'], function (settings) {
                     if (settings.applyAll) {
-                        resetToOriginalImages();
-                        filterAll(changes[key].newValue);
+                        resetToOriginalImages(function () {
+                            filterAll(changes[key].newValue);
+                        });
                     }
                 });
             }
