@@ -1,4 +1,4 @@
-// ------------------- color constants --------------------------------------
+// ------------------- Color constants --------------------------------------
 // Color wheel
 const CW_RED = {
     rgb: [255, 0, 0],
@@ -261,7 +261,7 @@ const TOL_LIGHT = [
     GRAY,
 ];
 
-// ------------------- helper methods --------------------------------------
+// ------------------- Helper methods --------------------------------------
 rgbToLab = function (rgb) {
     let r = rgb[0] / 255,
         g = rgb[1] / 255,
@@ -297,10 +297,9 @@ shuffleArray = function (array) {
     return array;
 };
 
-// filter an image with given palette
+// Filter an image with given palette
 filter = function (image, palette) {
-    // create canvas
-
+    // Create canvas
     let canvas = document.createElement('canvas');
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
@@ -308,12 +307,13 @@ filter = function (image, palette) {
     let ctx = canvas.getContext('2d');
     ctx.drawImage(image, 0, 0);
 
-    // draw image
+    // Draw image
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let data = imgData.data;
 
     let colorMap = {};
 
+    // Map colors to color wheel colors
     for (let i = 0; i < data.length; i += 4) {
         let r = data[i],
             g = data[i + 1],
@@ -325,13 +325,13 @@ filter = function (image, palette) {
             gb_diff = Math.abs(g - b),
             br_diff = Math.abs(b - r);
 
-        // if color isn't a shade of gray
+        // If color isn't a shade of gray
         if (rg_diff >= 15 || gb_diff >= 15 || br_diff >= 15) {
             let closest,
                 dist = Number.POSITIVE_INFINITY;
 
             COLOR_WHEEL.forEach((color) => {
-                // compute distance
+                // Compute distance
                 let curr_dist =
                     Math.pow(color.Lab[0] - Lab[0], 2) +
                     Math.pow(color.Lab[1] - Lab[1], 2) +
@@ -344,24 +344,24 @@ filter = function (image, palette) {
             });
 
             let closestToString = closest.rgb.join('-');
-            // if color hasn't been seen yet add it to the map
+            // If color hasn't been seen yet add it to the map
             if (!colorMap.hasOwnProperty(closestToString)) {
                 colorMap[closestToString] = 1;
             } else {
                 colorMap[closestToString]++;
             }
-            // overwrite current color with closest match based on Lab distance
+            // Overwrite current color with closest match based on LAB distance
             data[i] = closest.rgb[0];
             data[i + 1] = closest.rgb[1];
             data[i + 2] = closest.rgb[2];
         }
     }
 
-    // index for iterating through palette
-    let i = 0;
+    let i = 0; // Index for iterating through palette
     let shuffledPalette = shuffleArray(palette);
+
     for (let colorWheelColor in colorMap) {
-        // check if it's a significant color
+        // Check if it's a significant color
         if (colorMap[colorWheelColor] > 500) {
             colorMap[colorWheelColor] = shuffledPalette[i].rgb;
             i++;
@@ -370,7 +370,7 @@ filter = function (image, palette) {
         }
     }
 
-    // recolor using colorMap and palette colors
+    // Recolor using colorMap and palette colors
     for (let i = 0; i < data.length; i += 4) {
         let r = data[i],
             g = data[i + 1],
@@ -386,23 +386,22 @@ filter = function (image, palette) {
         }
     }
 
-    // update canvas image
+    // Update canvas image
     ctx.putImageData(imgData, 0, 0, 0, 0, canvas.width, canvas.height);
 
-    // create base64 url
+    // Create base64 url
     let base64_url = canvas.toDataURL();
 
     return base64_url;
 };
 
-// check if image is filtered
+// Check if image is filtered
 isFiltered = function (image) {
     return image.src.startsWith('data');
 };
 
-// cache the orignal image links of the page before filtering
+// Cache the orignal image links of the page before filtering
 cacheOriginalImages = function () {
-    // clear cache
     chrome.storage.local.set({ originalLinks: [] }, function () {
         console.log('Cache cleared.');
     });
@@ -423,16 +422,15 @@ cacheOriginalImages = function () {
     });
 };
 
-// reset to original page
+// Reset to original page
 resetToOriginalImages = function () {
-    // retrieve original links
+    // Retrieve original links
     chrome.storage.local.get(['originalLinks'], function (cache) {
         let images = document.getElementsByTagName('img');
 
-        // check if arrays are the same length
         if ((images.length = cache.originalLinks.length)) {
             for (let i = 0; i < images.length; i++) {
-                // if image is filtered, revert it
+                // If image is filtered, revert it
                 if (isFiltered(images[i]) && cache.originalLinks[i] !== null) {
                     images[i] = new Image();
                     images[i].src = cache.originalLinks[i];
@@ -445,9 +443,9 @@ resetToOriginalImages = function () {
     });
 };
 
-// apply selective filtering
+// Apply selective filtering
 selectivelyFilter = function () {
-    // listen to messages from background.js for context menu clicks
+    // Listen to messages from background.js for context menu clicks
     chrome.runtime.onMessage.addListener(function (message) {
         let images = document.getElementsByTagName('img');
 
@@ -478,7 +476,7 @@ selectivelyFilter = function () {
     });
 };
 
-// filter all the images on the page
+// Filter all the images on the page
 filterAll = function (palette) {
     let currPalette;
 
@@ -497,10 +495,10 @@ filterAll = function (palette) {
             break;
     }
 
-    // cache original images
+    // Cache original images
     cacheOriginalImages();
 
-    // get all images
+    // Get all images
     let images = document.getElementsByTagName('img');
 
     for (let i = 0; i < images.length; i++) {
@@ -512,31 +510,31 @@ filterAll = function (palette) {
 };
 
 //----------------------------------------------------------------------------
-// get cached prefernces for first load
+// Get cached prefernces for first load
 chrome.storage.local.get(['applyAll'], function (settings) {
-    // apply all setting on
+    // Apply all setting on
     if (settings.applyAll) {
         chrome.storage.local.get(['paletteSelected'], function (result) {
             filterAll(result.paletteSelected);
         });
     }
-    // selective filtering on
+    // Selective filtering on
     else {
         selectivelyFilter();
     }
 });
 
 //----------------------------------------------------------------------------
-// deal with on change
+// Deal with on change
 chrome.storage.onChanged.addListener(function (changes, namespace) {
     if (namespace === 'local') {
         for (let key in changes) {
-            // check for toggle change
+            // Check for toggle change
             if (key === 'applyAll') {
                 let curr_applyAll = changes[key].newValue;
-                // toggle from on --> off, selective filtering on
+                // Toggle from on --> off, selective filtering on
                 if (!curr_applyAll) {
-                    // remove filters
+                    // Remove filters
                     chrome.storage.local.get(['originalLinks'], function (
                         cache
                     ) {
@@ -546,7 +544,7 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
                     });
                     selectivelyFilter();
                 }
-                // toggle from off --> on
+                // Toggle from off --> on
                 else {
                     chrome.storage.local.get(['paletteSelected'], function (
                         result
@@ -555,7 +553,8 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
                     });
                 }
             }
-            // check for palette change
+
+            // Check for palette change
             else if (key === 'paletteSelected') {
                 chrome.storage.local.get(['applyAll'], function (settings) {
                     if (settings.applyAll) {

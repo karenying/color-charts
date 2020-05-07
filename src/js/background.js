@@ -1,4 +1,4 @@
-// filter image
+// Send message to contentScript which palette to use for selective filtering
 sendMessage = function (info, tab) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.sendMessage(
@@ -10,7 +10,7 @@ sendMessage = function (info, tab) {
     });
 };
 
-// create menu
+// Create menu
 createMenu = function () {
     const titles = [
         'None',
@@ -32,14 +32,14 @@ createMenu = function () {
     }
 };
 
-// get cached setting for first load
+// Get cached setting for first load
 chrome.storage.local.get(['applyAll'], function (settings) {
     if (!settings.applyAll) {
         createMenu();
     }
 });
 
-// update based on change
+// Update based on change
 chrome.storage.onChanged.addListener(function (changes, namespace) {
     if (namespace === 'local') {
         for (let key in changes) {
