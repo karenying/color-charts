@@ -299,10 +299,7 @@ shuffleArray = function (array) {
 
 // filter an image with given palette
 filter = function (image, palette) {
-    console.log('filtering');
-    console.log(image.src);
     // create canvas
-    console.log(image);
 
     let canvas = document.createElement('canvas');
     canvas.width = image.naturalWidth;
@@ -427,7 +424,7 @@ cacheOriginalImages = function () {
 };
 
 // reset to original page
-resetToOriginalImages = function (callback) {
+resetToOriginalImages = function () {
     // retrieve original links
     chrome.storage.local.get(['originalLinks'], function (cache) {
         let images = document.getElementsByTagName('img');
@@ -443,7 +440,8 @@ resetToOriginalImages = function (callback) {
                 }
             }
         }
-        callback();
+
+        // callback();
     });
 };
 
@@ -561,9 +559,8 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
             else if (key === 'paletteSelected') {
                 chrome.storage.local.get(['applyAll'], function (settings) {
                     if (settings.applyAll) {
-                        resetToOriginalImages(function () {
-                            filterAll(changes[key].newValue);
-                        });
+                        console.log('hi');
+                        filterAll(changes[key].newValue);
                     }
                 });
             }
