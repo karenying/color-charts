@@ -558,7 +558,6 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
             else if (key === 'paletteSelected') {
                 chrome.storage.local.get(['applyAll'], function (settings) {
                     if (settings.applyAll) {
-                        console.log('hi');
                         filterAll(changes[key].newValue);
                     }
                 });
