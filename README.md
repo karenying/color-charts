@@ -1,6 +1,6 @@
 # Color Charts
 
-Color Charts is a Chrome extension that aims to increase the readability of charts, graphs, and diagrams on the web. Visuals that depend on colors to convey informationmay be hard to read for people with color blindness. Color Charts improves upon existing extensions by using researched color blind friendly palettes. It allows for filtering of visuals on aweb page, with the option to choose between 4 different color blind friendly palettes. Built with vanilla JavaScript, Color Charts interacts with HTML <img> elements in the Chrome browser, utilizing HTML canvas and base64 encoding to filter the images.
+Color Charts is a Chrome extension that aims to increase the readability of charts, graphs, and diagrams on the web. Visuals that depend on colors to convey informationmay be hard to read for people with color blindness. Color Charts improves upon existing extensions by using researched color blind friendly palettes. It allows for filtering of visuals on a web page, with the option to choose between 4 different color blind friendly palettes. Built with vanilla JavaScript, Color Charts interacts with HTML &lt;img&gt; elements in the Chrome browser, utilizing HTML canvas and base64 encoding to filter the images.
 
 This extension was designed for the Spring 2020 Princeton CS Independent Work Seminar: Random Apps of Kindness -- Accessibility Technologies and User Interfaces.
 
