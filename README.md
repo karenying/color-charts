@@ -13,4 +13,4 @@ Read the final paper [here](https://github.com/karenying/color-charts/blob/maste
 3. Click "Load unpack" and select the destination as the cloned repository folder
 4. The Color Charts icon should now appear to the left of the address bar. Click on the icon to trigger the popup and utilize the extension as described in this section.
 
-**Disclaimer**: Color Charts only applies to HTML &lt; img &gt; elements. It does not work in PDFs, or on SVGs. It also only applies to images on the same domain as the page it appears on. It is not compatible with cross-origin images (images whose source is from another domain). To see the full extent of the extension, test Color Charts on this [page](https://karenying.com/color-charts-dummy-page/).
+**Disclaimer**: Color Charts only applies to HTML &lt;img&gt; elements. It does not work in PDFs, or on SVGs. It also only applies to images on the same domain as the page it appears on. It is not compatible with cross-origin images (images whose source is from another domain). To see the full extent of the extension, test Color Charts on this [page](https://karenying.com/color-charts-dummy-page/).
