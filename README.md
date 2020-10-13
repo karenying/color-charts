@@ -9,7 +9,7 @@ Read the final paper [here](https://github.com/karenying/color-charts/blob/maste
 **To use**:
 
 1. Clone this repo.
-2. Head over to Chrome Extensions (usually "chrome://extensions" in the address bar) and turn "Developer Mode" on the top left.
+2. Head over to Chrome Extensions (usually `chrome://extensions` in the address bar) and turn "Developer Mode" on the top left.
 3. Click "Load unpack" and select the destination as the cloned repository folder
 4. The Color Charts icon should now appear to the left of the address bar. Click on the icon to trigger the popup and utilize the extension as described in this section.
 
